@@ -14,5 +14,6 @@ install:
 
 build_script:
   - chmod +x gradlew
-  - ./gradlew test --info  # запускаем тест, флаг --info позволяет выводить больше информации
   - ./gradlew test --info "-Dselenide.headless=true"
+  on_finish:
+  - Stop-Process -Id $App.Id  # останавливаем SUT
