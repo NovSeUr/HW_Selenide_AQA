@@ -13,7 +13,7 @@ install:
   - java -jar ./artifacts/app-card-delivery.jar &
 
 build_script:
-  - chmod +x gradlew
-  - ./gradlew test --info "-Dselenide.headless=true"
+  - ps: chmod +x ./gradlew
+  - ps: ./gradlew test --info "-Dselenide.headless=true"
   on_finish:
-  - Stop-Process -Id $App.Id  # останавливаем SUT
+  -ps: Stop-Process -Id $App.Id  # останавливаем SUT
