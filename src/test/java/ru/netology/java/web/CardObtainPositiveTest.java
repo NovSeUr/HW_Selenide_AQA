@@ -44,6 +44,7 @@ public class CardObtainPositiveTest {
                 .shouldHave(Condition.text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15))
                 .shouldBe(Condition.visible);
     }
+
     @Test
     void testShouldNotFillTheDate() {
         String planningDate = generateDate(3, "dd.MM.yyyy");
