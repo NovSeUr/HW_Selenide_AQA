@@ -1,27 +1,28 @@
 package ru.netology.java.web;
 
+import com.codeborne.selenide.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
-import java.text.SimpleDateFormat;
+
 import java.time.Duration;
 import java.time.LocalDate;
+
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
+
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.*;
 
-public class CardObtainTest {
 
-    String[] monthNames = { "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" };
-    String date;
-    String month;
-    String day;
+public class CardObtainPositiveTest {
+
+    public String generateDate(long addDays, String pattern) {
+        return LocalDate.now().plusDays(addDays).format(DateTimeFormatter.ofPattern(pattern));
+    }
 
     @BeforeEach
     void setUp() {
@@ -30,99 +31,104 @@ public class CardObtainTest {
 
     @Test
     void testShouldFillTheForm() {
-
-        LocalDate deliveryDateCard = LocalDate.now().plusDays(3);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String dateDelivery = deliveryDateCard.format(formatter);
+        String planningDate = generateDate(3, "dd.MM.yyyy");
 
         $("[data-test-id=city] [placeholder='Город']").setValue("Екатеринбург");
         $("[data-test-id=date]  [placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id=date]  [placeholder='Дата встречи']").setValue(dateDelivery);
+        $("[data-test-id=date]  [placeholder='Дата встречи']").setValue(planningDate);
         $("[data-test-id=name] [type=text]").setValue("Антон Чехов");
         $("[data-test-id=phone] [type = tel]").setValue("+79992224175");
         $("[class=checkbox__box]").click();
         $("[class=button__content]").click();
-        $(withText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
+        $(".notification__content")
+                .shouldHave(Condition.text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15))
+                .shouldBe(Condition.visible);
+    }
+    @Test
+    void testShouldNotFillTheDate() {
+        String planningDate = generateDate(3, "dd.MM.yyyy");
+
+        $("[data-test-id=city] [placeholder='Город']").setValue("Екатеринбург");
+        $("[data-test-id=name] [type=text]").setValue("Антон Чехов");
+        $("[data-test-id=phone] [type = tel]").setValue("+79992224175");
+        $("[class=checkbox__box]").click();
+        $("[class=button__content]").click();
+        $(".notification__content")
+                .shouldHave(Condition.text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15))
+                .shouldBe(visible);
     }
 
     @Test
     void testShouldFillTheFormDoubleSurnameWithDash() {
-
-        LocalDate deliveryDateCard = LocalDate.now().plusDays(3);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String dateDelivery = deliveryDateCard.format(formatter);
+        String planningDate = generateDate(3, "dd.MM.yyyy");
 
         $("[data-test-id=city] [placeholder='Город']").setValue("Екатеринбург");
         $("[data-test-id=date]  [placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id=date]  [placeholder='Дата встречи']").setValue(dateDelivery);
+        $("[data-test-id=date]  [placeholder='Дата встречи']").setValue(planningDate);
         $("[data-test-id=name] [type=text]").setValue("Дмитрий Мамин-Сибиряк");
         $("[data-test-id=phone] [type = tel]").setValue("+79992224175");
         $("[class=checkbox__box]").click();
         $("[class=button__content]").click();
-        $(withText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
+        $(".notification__content")
+                .shouldHave(Condition.text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15))
+                .shouldBe(Condition.visible);
     }
 
     @Test
     void testShouldFillTheFormDoubleSurnameWithSpace() {
-
-        LocalDate deliveryDateCard = LocalDate.now().plusDays(3);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String dateDelivery = deliveryDateCard.format(formatter);
+        String planningDate = generateDate(3, "dd.MM.yyyy");
 
         $("[data-test-id=city] [placeholder='Город']").setValue("Екатеринбург");
         $("[data-test-id=date]  [placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id=date]  [placeholder='Дата встречи']").setValue(dateDelivery);
+        $("[data-test-id=date]  [placeholder='Дата встречи']").setValue(planningDate);
         $("[data-test-id=name] [type=text]").setValue("Дмитрий Мамин Сибиряк");
         $("[data-test-id=phone] [type = tel]").setValue("+79992224175");
         $("[class=checkbox__box]").click();
         $("[class=button__content]").click();
-        $(withText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
+        $(".notification__content")
+                .shouldHave(Condition.text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15))
+                .shouldBe(Condition.visible);
     }
 
     @Test
     void testShouldFillTheFormCityWithDash() {
-
-        LocalDate deliveryDateCard = LocalDate.now().plusDays(3);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String dateDelivery = deliveryDateCard.format(formatter);
+        String planningDate = generateDate(3, "dd.MM.yyyy");
 
         $("[data-test-id=city] [placeholder='Город']").setValue("Ханты-Мансийск");
         $("[data-test-id=date]  [placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id=date]  [placeholder='Дата встречи']").setValue(dateDelivery);
+        $("[data-test-id=date]  [placeholder='Дата встречи']").setValue(planningDate);
         $("[data-test-id=name] [type=text]").setValue("Антон Чехов");
         $("[data-test-id=phone] [type = tel]").setValue("+79992224175");
         $("[class=checkbox__box]").click();
         $("[class=button__content]").click();
-        $(withText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
+        $(".notification__content")
+                .shouldHave(Condition.text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15))
+                .shouldBe(Condition.visible);
     }
 
     @Test
     void testShouldFillTheFormWithDifficultWay() {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.DAY_OF_MONTH, 100);
-        date =  new SimpleDateFormat("dd.MM.yyyy").format(calendar.getTime());
-        month = monthNames[calendar.get(Calendar.MONTH)] + " " + calendar.get(Calendar.YEAR);
-        day = Integer.toString(calendar.get(Calendar.DATE));
-
-//        LocalDate deliveryDateCard = LocalDate.now().plusDays(3);
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-//        String dateDelivery = deliveryDateCard.format(formatter);
+        String planningDate = generateDate(3, "dd.MM.yyyy");
+        LocalDate date = LocalDate.now();
+        String day = String.valueOf(date.getDayOfMonth() + 3);
 
         $("[data-test-id=city] [placeholder='Город']").setValue("Ека");
         $(withText("Екатеринбург")).click();
         $("span[data-test-id='date'] button").click();
-        while (!$("div.calendar__name").getText().equals(month)) {
+
+        for (int i = date.getMonthValue(); i != 6; i++) {
             $$("div.calendar__arrow.calendar__arrow_direction_right").get(1).click();
         }
+
         $$("table.calendar__layout td").find(text(day)).click();
 
         $("[data-test-id=name] [type=text]").setValue("Антон Чехов");
         $("[data-test-id=phone] [type = tel]").setValue("+79992224175");
         $("[class=checkbox__box]").click();
         $("[class=button__content]").click();
-        $(withText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
+        $(".notification__content")
+                .shouldHave(text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15))
+                .shouldBe(Condition.visible);
     }
 }
 
