@@ -111,7 +111,7 @@ public class CardObtainPositiveTest {
     void testShouldFillTheFormWithDifficultWay() {
         String planningDate = generateDate(3, "dd.MM.yyyy");
         LocalDate date = LocalDate.now();
-        String day = String.valueOf(date.getDayOfMonth());
+        String day = String.valueOf(date.getDayOfMonth()+3);
 
         $("[data-test-id=city] [placeholder='Город']").setValue("Ека");
         $(withText("Екатеринбург")).click();
