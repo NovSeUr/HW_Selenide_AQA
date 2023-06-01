@@ -12,8 +12,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -109,26 +108,26 @@ public class CardObtainPositiveTest {
 
     @Test
     void testShouldFillTheFormWithDifficultWay() {
-        String planningDate = generateDate(3, "dd.MM.yyyy");
-        LocalDate date = LocalDate.now();
-        String day = String.valueOf(date.getDayOfMonth()+3);
+        String currentDate = generateDate(3, "dd.MM.yyyy");
+        String defaultMonth = generateDate(3, "MM");
+        String planningMonth = generateDate(7, "MM");
+        String planningDay = generateDate(3, "d");
 
         $("[data-test-id=city] [placeholder='Город']").setValue("Ека");
         $(withText("Екатеринбург")).click();
         $("span[data-test-id='date'] button").click();
 
-        for (int i = date.getMonthValue(); i != 6; i++) {
+        if (!defaultMonth.equals(planningMonth)) {
             $$("div.calendar__arrow.calendar__arrow_direction_right").get(1).click();
         }
 
-        $$("table.calendar__layout td").find(text(day)).click();
-
+        $$("[data-day]").find(text(planningDay)).click();
         $("[data-test-id=name] [type=text]").setValue("Антон Чехов");
         $("[data-test-id=phone] [type = tel]").setValue("+79992224175");
         $("[class=checkbox__box]").click();
         $("[class=button__content]").click();
         $(".notification__content")
-                .shouldHave(text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15))
+                .shouldHave(text("Встреча успешно забронирована на " + currentDate), Duration.ofSeconds(15))
                 .shouldBe(Condition.visible);
     }
 }
